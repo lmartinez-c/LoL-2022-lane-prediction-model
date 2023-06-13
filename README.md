@@ -1,5 +1,4 @@
-# LoL-2022-lane-prediction-model
-Project developed for the DSC 80 course of Spring 2023 
+# League of Legends Lane Position Prediction Model
 
 by Luis Martinez-Chun (lmartinezchun@ucsd.edu)
 
