@@ -7,14 +7,14 @@ by Luis Martinez-Chun (lmartinezchun@ucsd.edu)
 ## Framing the Problem
 
 
-
+<br>
 
 
 
 ---
 
 ## Baseline Model
-
+<br>
 
 
 
@@ -23,7 +23,7 @@ by Luis Martinez-Chun (lmartinezchun@ucsd.edu)
 ---
 
 ## Final Model
-
+<br>
 
 
 
