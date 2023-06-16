@@ -18,9 +18,9 @@ In other words, I chose to develop a model that accurately classifies the role o
 The response variable, or the variable my model is predicting is the `'position'` column for the dataset. 
 In order to properly evlauate my model's predictions, I chose to measure its accuracy. In this case accuracy is appropriate over other metrics since the distribution of the `'position'` column is even, meaning there is an equal number of each category/position. In cases where the class distribution is equal, accuracy is an appropriate metric.
 
-For my model, the information available at the time of making its prediction is all of the information in the original dataset excluding the `'position'` column since that is what the model is trying to predict. 
+For my model, the information available at the time of making its prediction is all of the information in the original dataset excluding the `'position'` column since that is what the model is trying to predict. <br>
 
-*Here is small sample of the original dataset:*
+*Here is small sample of the original dataset:* <br>
 
 | gameid                | datacompleteness   |   url | league   |   year | split   |   playoffs | date                |   game |   patch |   participantid | side   | position   | playername   | playerid                                  | teamname                 | teamid                                  | champion   | ban1   | ban2    | ban3   | ban4   | ban5   |   gamelength |   result |   kills |   deaths |   assists |   teamkills |   teamdeaths |   doublekills |   triplekills |   quadrakills |   pentakills |   firstblood |   firstbloodkill |   firstbloodassist |   firstbloodvictim |   team kpm |   ckpm |   firstdragon |   dragons |   opp_dragons |   elementaldrakes |   opp_elementaldrakes |   infernals |   mountains |   clouds |   oceans |   chemtechs |   hextechs |   dragons (type unknown) |   elders |   opp_elders |   firstherald |   heralds |   opp_heralds |   firstbaron |   barons |   opp_barons |   firsttower |   towers |   opp_towers |   firstmidtower |   firsttothreetowers |   turretplates |   opp_turretplates |   inhibitors |   opp_inhibitors |   damagetochampions |     dpm |   damageshare |   damagetakenperminute |   damagemitigatedperminute |   wardsplaced |    wpm |   wardskilled |   wcpm |   controlwardsbought |   visionscore |   vspm |   totalgold |   earnedgold |   earned gpm |   earnedgoldshare |   goldspent |   gspd |   total cs |   minionkills |   monsterkills |   monsterkillsownjungle |   monsterkillsenemyjungle |   cspm |   goldat10 |   xpat10 |   csat10 |   opp_goldat10 |   opp_xpat10 |   opp_csat10 |   golddiffat10 |   xpdiffat10 |   csdiffat10 |   killsat10 |   assistsat10 |   deathsat10 |   opp_killsat10 |   opp_assistsat10 |   opp_deathsat10 |   goldat15 |   xpat15 |   csat15 |   opp_goldat15 |   opp_xpat15 |   opp_csat15 |   golddiffat15 |   xpdiffat15 |   csdiffat15 |   killsat15 |   assistsat15 |   deathsat15 |   opp_killsat15 |   opp_assistsat15 |   opp_deathsat15 |
 |:----------------------|:-------------------|------:|:---------|-------:|:--------|-----------:|:--------------------|-------:|--------:|----------------:|:-------|:-----------|:-------------|:------------------------------------------|:-------------------------|:----------------------------------------|:-----------|:-------|:--------|:-------|:-------|:-------|-------------:|---------:|--------:|---------:|----------:|------------:|-------------:|--------------:|--------------:|--------------:|-------------:|-------------:|-----------------:|-------------------:|-------------------:|-----------:|-------:|--------------:|----------:|--------------:|------------------:|----------------------:|------------:|------------:|---------:|---------:|------------:|-----------:|-------------------------:|---------:|-------------:|--------------:|----------:|--------------:|-------------:|---------:|-------------:|-------------:|---------:|-------------:|----------------:|---------------------:|---------------:|-------------------:|-------------:|-----------------:|--------------------:|--------:|--------------:|-----------------------:|---------------------------:|--------------:|-------:|--------------:|-------:|---------------------:|--------------:|-------:|------------:|-------------:|-------------:|------------------:|------------:|-------:|-----------:|--------------:|---------------:|------------------------:|--------------------------:|-------:|-----------:|---------:|---------:|---------------:|-------------:|-------------:|---------------:|-------------:|-------------:|------------:|--------------:|-------------:|----------------:|------------------:|-----------------:|-----------:|---------:|---------:|---------------:|-------------:|-------------:|---------------:|-------------:|-------------:|------------:|--------------:|-------------:|----------------:|------------------:|-----------------:|
@@ -36,8 +36,10 @@ For my model, the information available at the time of making its prediction is 
 
 ## Baseline Model
 
-
-
+For my baseline model, I chose to use a `DecisionTreeClassifier()` since my model has 5 possible distinct values. The features I chose to input into the baseline model were the columns I felt provided relevant data for predicting their position. Specifically I chose to use the following columns in the baseline model: <br>
+`['kills', 'deaths', 'assists', 'doublekills', 'triplekills', 'quadrakills' 'pentakills', 'dpm', 'damagetakenperminute', 'damagetochampions', 'damagemitigatedperminute', 'totalgold', 'minionkills', 'monsterkills', 'wardsplaced', 'wpm' 'controlwardsbought', 'visionscore', 'cspm', 'heralds', 'barons', 'turretplates', 'dragons', 'total cs', 'earned gpm']` <br>
+All the columns listed above are quantitative, meaning they only contain numeric data. Therefore, no encodings were needed to preprocess the data. <br>
+One important note of my baseline model is I did not input any hyperparameters into the `DecisionTreeClassifier()`. Therefore, when my evaluating the prediction model against its the training data, it recieved a perfect accuracy score. However, it's accuracy against the testing data was ~75%. This score is relatively good, considering the model had to pick one of five possible positions for each player.
 
 
 <br>
@@ -45,12 +47,18 @@ For my model, the information available at the time of making its prediction is 
 
 ## Final Model
 
+In the final prediction model, I engineered extra features to improve its performance. For instance I used the `StdScalar()` transformer on the following columns: `['dpm','damagetakenperminute','damagetochampions','damagemitigatedperminute','totalgold','minionkills','monsterkills','total cs','earned gpm]`. I did so in hopes it improves my model by reducing noise such out possible outliers. Additionally, I also one-hot-encoded the `'patch'` column to account for possible bias from the meta, or patch-specific strategies. Lastly  
 
-
-
+In my final prediction model, I ended up using a RandomForestClassifier modeling algorithm. In order to optimize hyperparameters for my classifier, I utilized a `RandomSearchCV()`. In evaluating my final prediction model led to a result of ~81% accuracy on the testing data. Comparing the results of my final model to my baseline model, there was an improvement of ~6%. 
 
 
 <br>
 ---
 
 ## Fairness Analysis
+
+For my fairness analysis, I chose to if my prediction model was fair to match data where the `'patch'` column was pre 12.12 and the matches where the patch was post 12.12. I did so by conducting permutation tests and to see if the observed difference in accuracy was any different than if I permuted the `'patch'` column. I chose to conduct the permutation test at the 0.05 significance level. My hypotheses were as follows: <br>
+- **Null Hypothesis:** Our model is fair. Its precision for matches pre path 12.12 and matches post patch 12.10 are roughly the same, and any differences are due to random chance.
+- **Alternative Hypothesis:** Our model is unfair. Its precision for matches pre path 12.12 is lower than its precision for matches post patch 12.12. <br>
+
+After conducting my permutation tests, I came to a p-value of 0.08. This means that we reject the null hypothesis and accept the alternative that the model is biased for matches post patch 12.12. However, this is to be expected since the model actually took the `'patch'` column into account.
